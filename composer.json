@@ -1,0 +1,22 @@
+{
+    "name":"lsv/userauthentication",
+    "type":"library",
+    "description":"",
+    "keywords":["authentication"],
+    "license":"BSD-3",
+    "authors":[
+        {
+            "name":"Martin Aarhof",
+            "email":"martin.aarhof@gmail.com"
+        }
+    ],
+    "require":{
+        "php":">=5.2.4",
+        "gabordemooij/redbean":"dev-master"
+    },
+    "autoload":{
+        "psr-0":{
+            "Userauth_":"lib/"
+        }
+    }
+}

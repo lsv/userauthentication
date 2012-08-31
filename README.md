@@ -1,4 +1,3 @@
-<?php
 // First we setup our Redbean connection
 RedBean_Facade::setup();
 // Lookup the redbean manual to get more setup details

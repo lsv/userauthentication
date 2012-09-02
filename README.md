@@ -4,12 +4,15 @@
 
 ## Setup Redbean
 First we setup our Redbean connection
+
     RedBean_Facade::setup();
+
 Lookup the redbean manual to get more setup details
 
 ## Create a user
 Exception is cast if the username already exists
 ID from the database is returned if the user is created
+
     try {
         $id = Userauth_Auth::getInstance()
             ->setUsername('username')
@@ -20,7 +23,9 @@ ID from the database is returned if the user is created
         // Throws Exception if the username already exists
     }
 
+
 We can also add birthday, language, city, realname and other kind of stuff when we create our user
+
     $birthday = new DateTime();
     $options = array(
         'birthday' => $birthday->format('Y-m-d'),
@@ -37,8 +42,10 @@ We can also add birthday, language, city, realname and other kind of stuff when 
     }
 
 
+
 ## Validate user
 Lets validate the user from the login page (where the password is not encrypted)
+
     $o = Userauth_Auth::getInstance()
         ->setUsername('username')
         ->setPassword('username')
@@ -51,7 +58,9 @@ Lets validate the user from the login page (where the password is not encrypted)
         // User is not valid
     }
 
+
 Lets validte from the session (where the password is encrypted)
+
     $valid = Userauth_Auth::getInstance()->setFromSession($_SESSION['yourkeytoauth'])->validate();
     if ($valid) {
         // They user is still valid
@@ -60,6 +69,8 @@ Lets validte from the session (where the password is encrypted)
         // Redirect to login page or something similar
     }
 
+
 ## Logout
 Lets logout again
+
     Userauth_Auth::getInstance()->logout($_SESSION['yourkeytoauth']);

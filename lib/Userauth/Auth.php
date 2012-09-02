@@ -4,17 +4,17 @@ class Userauth_Auth
 {
 
 	/**
-	 * @var string The "table" name in redbean
+	 * @var string : The "table" name in redbean
 	 */
 	public $redbean_dispenser = 'userauth';
 
 	/**
-	 * @var string
+	 * @var string : The username
 	 */
 	protected $username;
 
 	/**
-	 * @var string
+	 * @var string : The password
 	 */
 	protected $password;
 
@@ -23,19 +23,38 @@ class Userauth_Auth
 	 */
 	protected $encrypted = false;
 
+    /**
+     * @var Userauth_Auth
+     */
+    static protected $_instance = null;
+
 	/**
-	 * @param RedBean_Facade $redbeanconnection
 	 * @param null $username : can be set with setUsername also
 	 * @param null $password : can be set with setPassword also
 	 * @param bool $encrypted : can be set with setEncrypted also
 	 */
-	public function __construct($username = null, $password = null, $encrypted = true)
+	protected function __construct($username, $password, $encrypted)
 	{
 		$this->setEncrypted($encrypted);
 		$this->setUsername($username);
 		$this->setPassword($password);
-
 	}
+
+    protected function __clone() {}
+
+    /**
+     * @static
+     * @param null $username : can be set with setUsername also
+     * @param null $password : can be set with setPassword also
+     * @param bool $encrypted : can be set with setEncrypted also
+     * @return Userauth_Auth
+     */
+    static public function getInstance($username = null, $password = null, $encrypted = false)
+    {
+        if (self::$_instance === null)
+            return self::$_instance = new self($username, $password, $encrypted);
+        return self::$_instance;
+    }
 
 	/**
 	 * @param $username : username of the user
@@ -94,7 +113,10 @@ class Userauth_Auth
 		}
 	}
 
-	public function logout($session)
+    /**
+     * @param array $session
+     */
+    public function logout(array $session)
 	{
 		if (isset($session['username'])) {
 			unset($session['username']);
@@ -105,7 +127,11 @@ class Userauth_Auth
 		}
 	}
 
-	public function setFromSession($session)
+    /**
+     * @param array $session
+     * @return Userauth_Auth
+     */
+    public function setFromSession(array $session)
 	{
 		if (isset($session['username'], $session['password'])) {
 			$this->setUsername($session['username']);
@@ -129,15 +155,12 @@ class Userauth_Auth
 		return false;
 	}
 
-	/**
-	 * @param $username : username of the new user
-	 * @param $password : password of the new user
-	 * @param array $options : other settings for the user, ex age, city or other stuff you would like to set on the user
-	 *
-	 * @return int : if the user is created the ID of the user gets returned
-	 * @throws Exception : if the username already exists
-	 */
-	public function createUser(array $options = null)
+    /**
+     * @param array $options : Other options for the user (fx. birthday, realname and such things
+     * @return integer : Returns ID of the created user
+     * @throws Exception
+     */
+    public function createUser(array $options = null)
 	{
 		if ($this->lookupUser($this->username)) {
 			throw new Exception('User already exists');
